@@ -1,0 +1,41 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29806.167
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "wa2Wrapper", "wa2Wrapper", "{BBC5DACF-4297-4D1C-8B87-917557A97319}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StackTools.Wa2Wrapper", "StackTools.Wa2Wrapper\StackTools.Wa2Wrapper.csproj", "{9D532011-CAE3-4F26-84CD-00CE8E9B354A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StackTools.Wa2Wrapper.Test", "StackTools.Wa2Wrapper.Test\StackTools.Wa2Wrapper.Test.csproj", "{14A27E53-347C-4A43-8BA3-53F32C843DFE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "restApiServer", "restApiServer", "{C95EED0B-E76C-44F3-8186-4F30EC8452C7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "graphqlServer", "graphqlServer", "{6197E789-819D-4CE8-8520-3EDD044F0988}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9D532011-CAE3-4F26-84CD-00CE8E9B354A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9D532011-CAE3-4F26-84CD-00CE8E9B354A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9D532011-CAE3-4F26-84CD-00CE8E9B354A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9D532011-CAE3-4F26-84CD-00CE8E9B354A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{14A27E53-347C-4A43-8BA3-53F32C843DFE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{14A27E53-347C-4A43-8BA3-53F32C843DFE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{14A27E53-347C-4A43-8BA3-53F32C843DFE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{14A27E53-347C-4A43-8BA3-53F32C843DFE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{9D532011-CAE3-4F26-84CD-00CE8E9B354A} = {BBC5DACF-4297-4D1C-8B87-917557A97319}
+		{14A27E53-347C-4A43-8BA3-53F32C843DFE} = {BBC5DACF-4297-4D1C-8B87-917557A97319}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {FE6C42EA-90B2-4157-AAEF-43F7DDD66C5A}
+	EndGlobalSection
+EndGlobal
