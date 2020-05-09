@@ -1,0 +1,41 @@
+{
+  "useMemoryCache": true,
+  "foolProofExpiration": 15,
+  "useOverridedTimestamp": false,
+
+  "Connection": {
+    "scheme": "http",
+    "host": "127.0.0.1",
+    "port": 80,
+    "account": "dexprt",
+    "password": "",
+    "timeout": 60,
+    "additionalHeaders": [
+      "agent: StackTools"
+    ]
+  },
+
+  "CacheExpiration": {
+    "alarms": 60,
+    "applications": 120,
+    "batches": 120,
+    "controllers": 120,
+    "keyInfos": 120,
+    "keyValues": 60,
+    "keyValuesHistory": 240,
+    "locations": 120,
+    "servers": 120
+  },
+
+  "ResourcePath": {
+    "alarms": "wa/2/alarms",
+    "applications": "wa/2/applications",
+    "batches": "wa/2/batches",
+    "controllers": "wa/2/controllers",
+    "keyInfos": "wa/2/keyinfos/locations",
+    "keyValues": true,  // illegal path, should be string
+    "locations": 33,    // illegal path, should be string
+    "servers": "wa/2/servers"
+  }
+
+}
