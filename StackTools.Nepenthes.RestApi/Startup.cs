@@ -26,7 +26,12 @@ namespace StackTools.Nepenthes.RestApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers().AddXmlSerializerFormatters();
+            services.AddControllers()
+                .AddJsonOptions(cfg =>
+                {
+                    cfg.JsonSerializerOptions.IgnoreNullValues = Configuration.GetValue("ignoreNullableValues", false);                    
+                });
+
             services.AddHttpClient();
             services.AddMemoryCache();
 

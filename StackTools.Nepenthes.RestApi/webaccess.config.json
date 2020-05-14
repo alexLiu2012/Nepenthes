@@ -1,4 +1,6 @@
 {
+  "ignoreNullableValues": true,
+
   "useMemoryCache": true,
   "foolProofExpiration": 15,
   "useOverridedTimestamp": false,

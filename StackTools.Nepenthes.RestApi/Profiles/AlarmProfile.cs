@@ -7,7 +7,8 @@ namespace StackTools.Nepenthes.RestApi.Dtos
     {
         public AlarmProfile()
         {
-            CreateMap<Wa2Alarm, AlarmDto>();
+            CreateMap<Wa2Alarm, AlarmDto>()
+                .ForMember(dest => dest.Location, opt => opt.MapFrom(src =>src.Location.Trim("/wa/2/locations/".ToCharArray())));
         }
     }
 }

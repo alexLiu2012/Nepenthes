@@ -7,7 +7,8 @@ namespace StackTools.Nepenthes.RestApi.Dtos
     {
         public BatchProfile()
         {
-            CreateMap<Wa2Batch, BatchDto>();
+            CreateMap<Wa2Batch, BatchDto>()
+                .ForMember(dest=>dest.Location, opt => opt.MapFrom(src=>src.Location.Trim("/wa/2/locations/".ToCharArray())));
         }
     }
 }

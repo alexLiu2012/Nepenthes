@@ -16,6 +16,7 @@ using Microsoft.Extensions.Options;
 using StackTools.Nepenthes.GraphQL.GraphQL;
 using StackTools.Nepenthes.GraphQL.GraphTypes;
 using StackTools.Wa2Wrapper;
+using StackTools.Wa2Wrapper.wa2Resource;
 
 namespace StackTools.Nepenthes.GraphQL
 {
@@ -43,18 +44,38 @@ namespace StackTools.Nepenthes.GraphQL
             
             // register graphql types
             services.AddScoped<GraphAlarm>();
-            /* services.AddScoped<GraphApplication>(); */
-            services.AddScoped<GraphBatch>();
-            services.AddScoped<GraphController>();
-            /* services.AddScoped<GraphKeyInfo>(); */
-            services.AddScoped<GraphKeyValue>();
-            services.AddScoped<GraphLocation>();
+            services.AddScoped<TypeFieldAlias<Wa2Alarm>>();
 
-            
+            /* services.AddScoped<GraphApplication>(); */
+
+            services.AddScoped<GraphBatch>();
+            services.AddScoped<TypeFieldAlias<Wa2Batch>>();
+
+            services.AddScoped<GraphController>();
+            services.AddScoped<TypeFieldAlias<Wa2Controller>>();
+
+            /* services.AddScoped<GraphKeyInfo>(); */
+
+            services.AddScoped<GraphKeyValue>();
+            services.AddScoped<TypeFieldAlias<Wa2KeyValue>>();
+
+            services.AddScoped<GraphLocation>();
+            services.AddScoped<TypeFieldAlias<Wa2Location>>();
+
+
+            // graph query args
+            services.AddScoped<AlarmFieldArguments>();
+            services.AddScoped<ApplicationFieldArguments>();
+            services.AddScoped<BatchFieldArguments>();
+            services.AddScoped<ControllerFieldArguments>();
+            services.AddScoped<KeyInfoFieldArguments>();
+            services.AddScoped<KeyValueFieldArguments>();
+            services.AddScoped<LocationFieldArguments>();
 
             // register graphql queries
             services.AddScoped<Wa2Query>();
             services.AddScoped<CustomQuery>();
+
 
             // register graphql schema
             services.AddScoped<Wa2Schema>();

@@ -5,15 +5,19 @@ namespace StackTools.Nepenthes.GraphQL.GraphTypes
 {
     public class GraphAlarm : ObjectGraphType<Wa2Alarm>
     {
+        private TypeFieldAlias<Wa2Alarm> _fieldAlias;
         private string _dateFormat;
 
-        public GraphAlarm()
+        public GraphAlarm(TypeFieldAlias<Wa2Alarm> afieldAlias)
         {
+            this._fieldAlias = afieldAlias;
             this._dateFormat = "yyyy-mm-dd";
 
             Name = "alarm";
             Description = "alarm";
 
+            // define the slef properties
+            #region
             // id
             Field<StringGraphType>(
                 name: "id",                
@@ -24,7 +28,8 @@ namespace StackTools.Nepenthes.GraphQL.GraphTypes
             Field<StringGraphType>(
                 name: "origin",
                 description: "",
-                resolve: context => context.Source.Origin);
+                arguments: this._fieldAlias.Arguments,
+                resolve: this._fieldAlias.GetResolver("Origin"));
 
             // name
             Field<StringGraphType>(
@@ -48,7 +53,9 @@ namespace StackTools.Nepenthes.GraphQL.GraphTypes
             Field<StringGraphType>(
                 name: "location",
                 description: "",
-                resolve: context => context.Source.Location.TrimStart("/wa/2/locations/".ToCharArray()));   
+                arguments: this._fieldAlias.Arguments,    // use alias
+                resolve: /*context => *//*context.Source.Location.TrimStart("/wa/2/locations/".ToCharArray())*/
+                    this._fieldAlias.GetResolver("Location"));   
 
             // category
             Field<StringGraphType>(
@@ -127,6 +134,10 @@ namespace StackTools.Nepenthes.GraphQL.GraphTypes
                 name: "type",
                 description: "",
                 resolve: context => context.Source.Type);
+
+            #endregion
+
+            // define the related properties
 
         }
     }

@@ -8,6 +8,7 @@ namespace StackTools.Nepenthes.RestApi.Dtos
         public KeyValueProfile()
         {
             CreateMap<Wa2KeyValue, KeyValueDto>()
+                .ForMember(dest => dest.RelatedTo, opt => opt.MapFrom(src => src.RelatedTo.Trim("/wa/2/locations/".ToCharArray())))
                 .ForMember(dest => dest.Display, opt => opt.MapFrom(src => src.Actual.Display))
                 .ForMember(dest => dest.Value, opt => opt.MapFrom(src => src.Actual.Value))
                 .ForMember(dest => dest.Unit, opt => opt.MapFrom(src => src.Actual.Unit))

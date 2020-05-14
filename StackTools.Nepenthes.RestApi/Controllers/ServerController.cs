@@ -19,6 +19,7 @@ namespace StackTools.Nepenthes.RestApi.Controllers
         }
 
         [HttpGet]
+        [ApiExplorerSettings(IgnoreApi = true)]
         [Produces("application/json", "application/xml")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]

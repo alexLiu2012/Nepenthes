@@ -11,47 +11,52 @@ using StackTools.Wa2Wrapper.wa2Resource;
 namespace StackTools.Nepenthes.GraphQL.GraphQL
 {
     public class Wa2Query : ObjectGraphType
-    {
-        private Wa2Client _client;
+    {        
+        private AlarmFieldArguments _alarmArgs;
+        private ApplicationFieldArguments _applicationArgs;
+        private BatchFieldArguments _batchArgs;
+        private ControllerFieldArguments _controllerArgs;
+        private KeyInfoFieldArguments _keyinfoArgs;
+        private KeyValueFieldArguments _keyvalueArgs;
+        private LocationFieldArguments _locationArgs;
 
-        public Wa2Query(Wa2Client aClient)
-        {
-            this._client = aClient;
+        public Wa2Query(            
+            AlarmFieldArguments alarmArgs,
+            ApplicationFieldArguments applicationArgs,
+            BatchFieldArguments batchArgs,
+            ControllerFieldArguments controllerArgs,
+            KeyInfoFieldArguments keyinfoArgs,
+            KeyValueFieldArguments keyvalueArgs,
+            LocationFieldArguments locationArgs)
+        {            
+            this._alarmArgs = alarmArgs;
+            this._applicationArgs = applicationArgs;
+            this._batchArgs = batchArgs;
+            this._controllerArgs = controllerArgs;
+            this._keyinfoArgs = keyinfoArgs;
+            this._keyvalueArgs = keyvalueArgs;
+            this._locationArgs = locationArgs;
 
             Name = "wa2query";
             Description = "wa2query";
-
-            Field<ListGraphType<StringGraphType>>(
-                name: "test",
-                description: "a test field",
-                arguments: new QueryArguments()
-                {
-                    new QueryArgument<StringGraphType>()
-                    {
-                        Name = "input"
-                    }
-                },
-                resolve: context => _client.ToString() + context.GetArgument<string>("input") ?? "empty");
-
-           
+            
             Field<ListGraphType<GraphAlarm>>(
                 name: "alarms",
                 description: "",
                 arguments: null,
-                resolve: context => _client.Retrieve<Wa2Alarm>());
-
+                resolve: alarmArgs.GetResolver());
 
             //Field<ListGraphType<GraphApplication>>();
 
             Field<ListGraphType<GraphBatch>>(
                 name: "batches",
                 description:"",
-                resolve: context => _client.Retrieve<Wa2Batch>());
+                resolve: batchArgs.GetResolver());
 
             Field<ListGraphType<GraphController>>(
                 name: "controllers",
                 description:"",
-                resolve: context => _client.Retrieve<Wa2Controller>());
+                resolve: controllerArgs.GetResolver());
 
 
             //Field<ListGraphType<GraphKeyInfo>>();
@@ -60,12 +65,12 @@ namespace StackTools.Nepenthes.GraphQL.GraphQL
                 name: "keyvalues",
                 description:"",
                 arguments: null,
-                resolve: context => _client.Retrieve<Wa2KeyValue>());
+                resolve: keyvalueArgs.GetResolver());
 
             Field<ListGraphType<GraphLocation>>(
                 name: "locations",
                 description: "",
-                resolve: context => _client.Retrieve<Wa2Location>());
+                resolve: locationArgs.GetResolver());
     
         }
     }

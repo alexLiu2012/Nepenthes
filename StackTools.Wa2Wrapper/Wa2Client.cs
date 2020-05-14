@@ -57,7 +57,7 @@ namespace StackTools.Wa2Wrapper
             var expiration = this._wa2ClientOpt.GetExpiration<TResource>();
 
             var rsc = this.GetResources(path, expiration);
-            var rscObjs = JsonConvert.DeserializeObject<Wa2ResourceCollection<TResource>>(rsc).Items;            
+            var rscObjs = JsonConvert.DeserializeObject<Wa2ResourceCollection<TResource>>(rsc).Items;          
 
             // filter objects
             if (filter != null)

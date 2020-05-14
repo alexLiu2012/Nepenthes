@@ -8,7 +8,8 @@ namespace StackTools.Wa2Wrapper
     {
         public bool UseMemoryCache { get; set; }
         public uint FoolProofExpiration { get; set; }
-        public bool UseOverridedTimestamp { get; set; }
+        public bool UseOverridedTimestamp { get; set; }        
+        
 
         private Wa2ConnectOptions Connection { get; set; }
         private Wa2ResourceOptions ResourcePath { get; set; }
