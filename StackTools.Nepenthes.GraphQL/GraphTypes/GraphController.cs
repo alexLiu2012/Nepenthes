@@ -1,20 +1,26 @@
 ﻿using GraphQL.Types;
+using StackTools.Wa2Wrapper;
 using StackTools.Wa2Wrapper.wa2Resource;
 
 namespace StackTools.Nepenthes.GraphQL.GraphTypes
 {
     public class GraphController : ObjectGraphType<Wa2Controller>
     {
-        public GraphController()
+        private Wa2Client _client;
+        private TypeFieldAliasHelper _fieldAlias;
+
+        public GraphController(
+            Wa2Client aClient,
+            TypeFieldAliasHelper aFieldAlias)
         {
+            this._client = aClient;
+            this._fieldAlias = aFieldAlias;
+
             Name = "controllers";
             Description = "";
 
-            // id
-            Field<StringGraphType>(
-                name: "id",
-                description: "",
-                resolve: context => context.Source.Id);
+            // define the self properties
+            #region            
 
             // name
             Field<StringGraphType>(
@@ -22,12 +28,16 @@ namespace StackTools.Nepenthes.GraphQL.GraphTypes
                 description: "",
                 resolve: context => context.Source.Name);
 
-            // origin
+            // display name
             Field<StringGraphType>(
-                name: "origin",
+                name: "display_name",
                 description: "",
-                arguments: null,    // use alias
-                resolve: context => context.Source.Origin);
+                arguments: this._fieldAlias.Arguments,
+                resolve: context =>
+                {
+                    var value = context.Source.Name;
+                    return this._fieldAlias.GetAlias(context, value);
+                });
 
             // applications
             // should use linked resource??
@@ -38,10 +48,20 @@ namespace StackTools.Nepenthes.GraphQL.GraphTypes
 
             // locations
             // should use linked resource??
-            Field<StringGraphType>(
+            Field<ListGraphType<StringGraphType>>(
                 name: "locations",
                 description: "",
                 resolve: context => context.Source.Locations);
+
+            // services access?
+
+
+
+            #endregion
+
+
+            // define the linked properties
+
         }
     }
 }

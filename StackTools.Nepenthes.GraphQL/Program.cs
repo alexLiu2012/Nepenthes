@@ -21,6 +21,9 @@ namespace StackTools.Nepenthes.GraphQL
                     // load customized settings
 
                     cfg.AddJsonFile(Path.Combine(Directory.GetCurrentDirectory(), "webaccess.config.json"), true, true);
+
+                    // add alias dictionary
+                    cfg.AddJsonFile(Path.Combine(Directory.GetCurrentDirectory(), "webaccess.alias.json"), true, true);
                 })
 
                 .ConfigureWebHostDefaults(webBuilder =>

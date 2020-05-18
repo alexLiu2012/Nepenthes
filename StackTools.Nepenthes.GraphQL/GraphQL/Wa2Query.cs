@@ -40,33 +40,39 @@ namespace StackTools.Nepenthes.GraphQL.GraphQL
             Name = "wa2query";
             Description = "wa2query";
             
+            // query alarms
             Field<ListGraphType<GraphAlarm>>(
                 name: "alarms",
                 description: "",
-                arguments: null,
+                arguments: alarmArgs.GetArguments(),
                 resolve: alarmArgs.GetResolver());
 
+            // query applications
             //Field<ListGraphType<GraphApplication>>();
 
+            // query batches
             Field<ListGraphType<GraphBatch>>(
                 name: "batches",
                 description:"",
                 resolve: batchArgs.GetResolver());
 
+            // query controllers
             Field<ListGraphType<GraphController>>(
                 name: "controllers",
                 description:"",
                 resolve: controllerArgs.GetResolver());
 
-
+            // query keyinfos
             //Field<ListGraphType<GraphKeyInfo>>();
-                
+            
+            // query keyvalues
             Field<ListGraphType<GraphKeyValue>>(
                 name: "keyvalues",
                 description:"",
                 arguments: null,
                 resolve: keyvalueArgs.GetResolver());
 
+            // query locations
             Field<ListGraphType<GraphLocation>>(
                 name: "locations",
                 description: "",

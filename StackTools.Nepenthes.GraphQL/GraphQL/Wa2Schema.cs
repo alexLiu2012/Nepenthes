@@ -8,16 +8,16 @@ namespace StackTools.Nepenthes.GraphQL.GraphQL
     {
         public Wa2Schema(IServiceProvider services) : base(services)
         {
-            var mainQuery = services.GetRequiredService<Wa2Query>();
+            var wa2Query = services.GetRequiredService<Wa2Query>();
             var cusQuery = services.GetRequiredService<CustomQuery>();
 
             // add customized queries to main query
             foreach (var field in cusQuery.Fields)
             {
-                mainQuery.AddField(field);
+                wa2Query.AddField(field);
             }
 
-            Query = mainQuery;
+            Query = wa2Query;
             Mutation = null;
             Subscription = null;              
         }

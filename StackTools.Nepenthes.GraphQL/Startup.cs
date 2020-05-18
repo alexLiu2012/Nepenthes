@@ -41,27 +41,20 @@ namespace StackTools.Nepenthes.GraphQL
             services.Configure<Wa2ClientOptions>(Configuration, binder => binder.BindNonPublicProperties = true);
             services.AddScoped(sp => sp.GetService<IOptionsSnapshot<Wa2ClientOptions>>().Value);
             services.AddScoped<Wa2Client>();
-            
+
+            // register alias dictionary
+            services.Configure<TypeFieldAlias>(Configuration);
+            services.AddScoped(sp => sp.GetService<IOptionsSnapshot<TypeFieldAlias>>().Value);
+
             // register graphql types
-            services.AddScoped<GraphAlarm>();
-            services.AddScoped<TypeFieldAlias<Wa2Alarm>>();
-
+            services.AddScoped<GraphAlarm>();            
             /* services.AddScoped<GraphApplication>(); */
-
-            services.AddScoped<GraphBatch>();
-            services.AddScoped<TypeFieldAlias<Wa2Batch>>();
-
-            services.AddScoped<GraphController>();
-            services.AddScoped<TypeFieldAlias<Wa2Controller>>();
-
+            services.AddScoped<GraphBatch>();            
+            services.AddScoped<GraphController>();            
             /* services.AddScoped<GraphKeyInfo>(); */
-
-            services.AddScoped<GraphKeyValue>();
-            services.AddScoped<TypeFieldAlias<Wa2KeyValue>>();
-
+            services.AddScoped<GraphKeyValue>();            
             services.AddScoped<GraphLocation>();
-            services.AddScoped<TypeFieldAlias<Wa2Location>>();
-
+            services.AddScoped<TypeFieldAliasHelper>();
 
             // graph query args
             services.AddScoped<AlarmFieldArguments>();
@@ -75,7 +68,6 @@ namespace StackTools.Nepenthes.GraphQL
             // register graphql queries
             services.AddScoped<Wa2Query>();
             services.AddScoped<CustomQuery>();
-
 
             // register graphql schema
             services.AddScoped<Wa2Schema>();

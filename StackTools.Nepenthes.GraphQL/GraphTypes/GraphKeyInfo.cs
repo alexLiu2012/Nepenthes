@@ -11,9 +11,11 @@ namespace StackTools.Nepenthes.GraphQL.GraphTypes
     {
         public GraphKeyInfo()
         {
-            Name = "";
-            Description = "";
+            Name = "keyinfos";
+            Description = "keyinfos";
 
+            // define the self properties
+            #region
             // id
             Field<StringGraphType>(
                 name: "id",
@@ -40,6 +42,11 @@ namespace StackTools.Nepenthes.GraphQL.GraphTypes
             // readonly
 
             // advanced
+
+            #endregion
+
+            // define the linked properties
+
         }
     }
 }

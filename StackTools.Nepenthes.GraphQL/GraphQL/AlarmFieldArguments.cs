@@ -70,7 +70,7 @@ namespace StackTools.Nepenthes.GraphQL.GraphQL
                 // is acknowledged
                 new QueryArgument<BooleanGraphType>()
                 {
-                    Name = "isAcked",
+                    Name = "isAcked", 
                     Description = "",
                     DefaultValue = false
                 },
@@ -116,7 +116,7 @@ namespace StackTools.Nepenthes.GraphQL.GraphQL
             return context =>
             {
                 var alarms = this._client.Retrieve<Wa2Alarm>();
-
+                
                 // ids
                 // origins
                 // names

@@ -1,51 +1,64 @@
 ﻿using GraphQL.Types;
+using StackTools.Wa2Wrapper;
 using StackTools.Wa2Wrapper.wa2Resource;
+using System.Linq;
 
 namespace StackTools.Nepenthes.GraphQL.GraphTypes
 {
     public class GraphKeyValue : ObjectGraphType<Wa2KeyValue>
     {
+        private Wa2Client _client;
+        private TypeFieldAliasHelper _fieldAlias;
         private string _dateFormat;
 
-        public GraphKeyValue()
+        public GraphKeyValue(
+            Wa2Client aClient,
+            TypeFieldAliasHelper aFieldAlias)
         {
+            this._client = aClient;
+            this._fieldAlias = aFieldAlias;
             this._dateFormat = "yyyy-mm-dd";
 
             Name = "keyvalues";
             Description = "";
 
-            // id
-            Field<StringGraphType>(
-                name: "id",
-                description: "",
-                resolve: context => context.Source.Id);
+            // define the self properties
+            #region                        
 
-            // origin
+            // keyinfo -> name
             Field<StringGraphType>(
-                name: "origin",
-                description: "",
-                arguments: null,    // use alias
-                resolve: context => context.Source.Origin);
-
-            // related to
-            Field<StringGraphType>(
-                name: "location",
-                description: "",
-                arguments: null,    // use alias as location name
-                resolve: context => context.Source.RelatedTo.TrimStart("/wa/2/locations/".ToCharArray()));
-
-            // keyinfo
-            Field<StringGraphType>(
-                name: "keyinfo",
-                description: "",
-                arguments: null,    // use alias
+                name: "name",
+                description: "",                
                 resolve: context => context.Source.KeyInfo);
 
-            // display
+            // display name
             Field<StringGraphType>(
-                name: "display",
+                name: "display_name",
                 description: "",
-                resolve: context => context.Source.Actual.Display);
+                arguments: this._fieldAlias.Arguments,
+                resolve: context =>
+                {
+                    var value = context.Source.KeyInfo;
+                    return this._fieldAlias.GetAlias(context, value);
+                });
+
+            // related to -> location
+            Field<StringGraphType>(
+                name: "location",
+                description: "",                
+                resolve: context => context.Source.RelatedTo.TrimStart("/wa/2/locations/".ToCharArray()));
+
+            // display location with alias
+            Field<StringGraphType>(
+                name: "display_location",
+                description: "",
+                arguments: this._fieldAlias.Arguments,
+                resolve: context =>
+                {
+                    var location = context.Source.RelatedTo.TrimStart("/wa/2/locations/".ToCharArray());
+                    var value = this._client.Retrieve<Wa2Location>().FirstOrDefault(l => l.Id == location).Name;
+                    return this._fieldAlias.GetAlias(context, value);
+                });
 
             // value
             Field<StringGraphType>(
@@ -59,29 +72,11 @@ namespace StackTools.Nepenthes.GraphQL.GraphTypes
                 description: "",
                 resolve: context => context.Source.Actual.Unit);
 
-            // precision
-            Field<IntGraphType>(
-                name: "precision",
-                description: "",
-                resolve: context => context.Source.Actual.Precision);
-
-            // is readonly
-            Field<BooleanGraphType>(
-                name: "is_readonly",
-                description: "",
-                resolve: context => context.Source.Actual.IsReadonly);
-
-            // min
-            Field<FloatGraphType>(
-                name: "min",
-                description: "",
-                resolve: context => context.Source.Min);
-
-            // max
+            // display
             Field<StringGraphType>(
-                name: "max",
+                name: "display",
                 description: "",
-                resolve: context => context.Source.Max);
+                resolve: context => context.Source.Actual.Display);                                                
 
             // timestamp
             Field<StringGraphType>(
@@ -101,6 +96,9 @@ namespace StackTools.Nepenthes.GraphQL.GraphTypes
                 description: "",
                 resolve: context => context.Source.History);
 
+            #endregion
+
+            // define the linked properties
         }
 
     }

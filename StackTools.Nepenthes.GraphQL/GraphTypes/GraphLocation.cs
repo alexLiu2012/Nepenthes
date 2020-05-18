@@ -1,20 +1,26 @@
 ﻿using GraphQL.Types;
+using StackTools.Wa2Wrapper;
 using StackTools.Wa2Wrapper.wa2Resource;
 
 namespace StackTools.Nepenthes.GraphQL.GraphTypes
 {
     public class GraphLocation : ObjectGraphType<Wa2Location>
     {
-        public GraphLocation()
+        private Wa2Client _client;
+        private TypeFieldAliasHelper _fieldAlias;
+
+        public GraphLocation(
+            Wa2Client aClient,
+            TypeFieldAliasHelper aFieldAlias)
         {
+            this._client = aClient;
+            this._fieldAlias = aFieldAlias;
+
             Name = "locations";
             Description = "";
 
-            // id
-            Field<StringGraphType>(
-                name: "id",
-                description: "",
-                resolve: context => context.Source.Id);
+            // define the self properties
+            #region            
 
             // name
             Field<StringGraphType>(
@@ -22,19 +28,33 @@ namespace StackTools.Nepenthes.GraphQL.GraphTypes
                 description: "",
                 resolve: context => context.Source.Name);
 
+            // display name with alias
+            Field<StringGraphType>(
+                name: "display_name",
+                description: "",
+                arguments: this._fieldAlias.Arguments,
+                resolve: context =>
+                {
+                    var value = context.Source.Name;
+                    return this._fieldAlias.GetAlias(context, value);
+                });
+
             // type
             Field<StringGraphType>(
                 name: "type",
-                description: "",
-                arguments: null,    // use alias expecial an enum 
+                description: "",                
                 resolve: context => context.Source.Type);
 
-            // origin
+            // display type with alias
             Field<StringGraphType>(
-                name: "origin",
+                name: "display_type",
                 description: "",
-                arguments: null,    // use alias
-                resolve: context => context.Source.Origin);
+                arguments: this._fieldAlias.Arguments,
+                resolve: context =>
+                {
+                    var value = context.Source.Type;
+                    return this._fieldAlias.GetAlias(context, value);
+                });
 
             // parent
             Field<StringGraphType>(
@@ -43,12 +63,17 @@ namespace StackTools.Nepenthes.GraphQL.GraphTypes
                 arguments: null,    // use alias
                 resolve: context => context.Source.Parent);
 
-            // ? children
-            Field<StringGraphType>(
+            // children, nullable
+            Field<ListGraphType<StringGraphType>>(
                 name: "children",
                 description: "",
                 arguments: null,    // use alias
                 resolve: context => context.Source.Children);
+            
+            #endregion
+
+            // define the linked properties
+
         }
     }
 }

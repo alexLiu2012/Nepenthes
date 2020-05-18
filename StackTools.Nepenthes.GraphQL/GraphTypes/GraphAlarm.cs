@@ -1,61 +1,64 @@
 ﻿using GraphQL.Types;
+using StackTools.Wa2Wrapper;
 using StackTools.Wa2Wrapper.wa2Resource;
+using System.Linq;
 
 namespace StackTools.Nepenthes.GraphQL.GraphTypes
 {
     public class GraphAlarm : ObjectGraphType<Wa2Alarm>
     {
-        private TypeFieldAlias<Wa2Alarm> _fieldAlias;
+        private TypeFieldAliasHelper _fieldAlias;
         private string _dateFormat;
+        private Wa2Client _client;
 
-        public GraphAlarm(TypeFieldAlias<Wa2Alarm> afieldAlias)
+        public GraphAlarm(
+            Wa2Client aClient,
+            TypeFieldAliasHelper afieldAlias)
         {
+            this._client = aClient;
             this._fieldAlias = afieldAlias;
-            this._dateFormat = "yyyy-mm-dd";
-
+            this._dateFormat = "yyyy-mm-dd";                        
+            
             Name = "alarm";
-            Description = "alarm";
-
+            Description = "alarm";            
+            
             // define the slef properties
-            #region
-            // id
-            Field<StringGraphType>(
-                name: "id",                
-                description: "",                
-                resolve: context => context.Source.Id);
-
-            // origin
-            Field<StringGraphType>(
-                name: "origin",
-                description: "",
-                arguments: this._fieldAlias.Arguments,
-                resolve: this._fieldAlias.GetResolver("Origin"));
-
+            #region  
+            
             // name
             Field<StringGraphType>(
                 name: "name",
                 description: "",
                 resolve: context => context.Source.Name);
 
-            // displayName
+            // displayName with alias
             Field<StringGraphType>(
                 name: "display_name",
                 description: "",
-                resolve: context => context.Source.DisplayName);
-
-            // description
-            Field<StringGraphType>(
-                name: "description",
-                description: "",
-                resolve: context => context.Source.Description);
-
+                arguments: this._fieldAlias.Arguments,
+                resolve: context =>
+                {
+                    var value = context.Source.DisplayName;
+                    return this._fieldAlias.GetAlias(context, value);
+                });
+                
             // location
             Field<StringGraphType>(
                 name: "location",
                 description: "",
-                arguments: this._fieldAlias.Arguments,    // use alias
-                resolve: /*context => *//*context.Source.Location.TrimStart("/wa/2/locations/".ToCharArray())*/
-                    this._fieldAlias.GetResolver("Location"));   
+                resolve: context => context.Source.Location.TrimStart("/wa/2/locations/".ToCharArray()));
+
+            // displayLocation with alias
+            Field<StringGraphType>(
+                name: "display_location",
+                description: "",
+                arguments: this._fieldAlias.Arguments,
+                resolve: context =>
+                {
+                    var location = context.Source.Location.TrimStart("/wa/2/locations/".ToCharArray());
+                    var value = this._client.Retrieve<Wa2Location>().FirstOrDefault(l => l.Id == location).Name;
+                    return this._fieldAlias.GetAlias(context, value);
+                });
 
             // category
             Field<StringGraphType>(
@@ -63,11 +66,16 @@ namespace StackTools.Nepenthes.GraphQL.GraphTypes
                 description: "",
                 resolve: context => context.Source.Category);
 
-            // dispalyCategory
+            // dispalyCategory with alias
             Field<StringGraphType>(
                 name: "display_category",
                 description: "",
-                resolve: context => context.Source.DisplayCategory);
+                arguments: this._fieldAlias.Arguments,
+                resolve: context =>
+                {
+                    var value = context.Source.DisplayCategory;
+                    return this._fieldAlias.GetAlias(context, value);
+                });
 
             // group
             Field<IntGraphType>(
@@ -81,48 +89,6 @@ namespace StackTools.Nepenthes.GraphQL.GraphTypes
                 description: "",
                 resolve: context => context.Source.Code);
 
-            // generation time
-            Field<StringGraphType>(
-                name: "generation_time",
-                description: "",
-                resolve: context => context.Source.GenerationTime.ToString(this._dateFormat));  
-
-            // isCeased
-            Field<BooleanGraphType>(
-                name: "is_ceased",
-                description: "",
-                resolve: context => context.Source.IsCeased);
-
-            // ? ceased time
-            Field<StringGraphType>(
-                name: "ceased_time",
-                description: "",
-                resolve: context =>
-                    context.Source.CeasedTime.HasValue ? context.Source.CeasedTime.Value.ToString(this._dateFormat) : null);  
-
-            // can acknowledge
-            Field<BooleanGraphType>(
-                name: "can_acknowledge",
-                description: "",
-                resolve: context => context.Source.CanAcknowledge);
-
-            // ? acknowledged by 
-            Field<StringGraphType>(
-                name: "acknowledged_by",
-                description: "",
-                resolve: context => context.Source.AcknowledgedBy);
-
-            // ? acknowledged time
-            Field<StringGraphType>(
-                name: "acknowledge_time",
-                description: "",
-                resolve: context =>
-                    context.Source.AcknowledgedTime.HasValue ? context.Source.AcknowledgedTime.Value.ToString(this._dateFormat) : null);            
-
-            // string reason
-
-            // solution
-
             // source
             Field<StringGraphType>(
                 name: "source",
@@ -134,6 +100,50 @@ namespace StackTools.Nepenthes.GraphQL.GraphTypes
                 name: "type",
                 description: "",
                 resolve: context => context.Source.Type);
+
+            // isCeased
+            Field<BooleanGraphType>(
+                name: "is_ceased",
+                description: "",
+                resolve: context => context.Source.IsCeased);
+
+            // can acknowledge
+            Field<BooleanGraphType>(
+                name: "can_acknowledge",
+                description: "",
+                resolve: context => context.Source.CanAcknowledge);
+
+            // acknowledged by, nullable
+            Field<StringGraphType>(
+                name: "acknowledged_by",
+                description: "",
+                resolve: context => context.Source.AcknowledgedBy);
+
+            // generation time
+            Field<StringGraphType>(
+                name: "generation_time",
+                description: "",
+                resolve: context => context.Source.GenerationTime.ToString(this._dateFormat));
+
+            // acknowledged time, nullable
+            Field<StringGraphType>(
+                name: "acknowledge_time",
+                description: "",
+                resolve: context =>
+                    context.Source.AcknowledgedTime.HasValue ? context.Source.AcknowledgedTime.Value.ToString(this._dateFormat) : null);
+
+            // ceased time, nullable
+            Field<StringGraphType>(
+                name: "ceased_time",
+                description: "",
+                resolve: context =>
+                    context.Source.CeasedTime.HasValue ? context.Source.CeasedTime.Value.ToString(this._dateFormat) : null);
+
+            // description
+            Field<StringGraphType>(
+                name: "description",
+                description: "",
+                resolve: context => context.Source.Description);                                                                                                                     
 
             #endregion
 
