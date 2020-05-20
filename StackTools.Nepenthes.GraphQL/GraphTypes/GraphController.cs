@@ -53,6 +53,9 @@ namespace StackTools.Nepenthes.GraphQL.GraphTypes
                 description: "",
                 resolve: context => context.Source.Locations);
 
+            // display application??
+
+
             // services access?
 
 

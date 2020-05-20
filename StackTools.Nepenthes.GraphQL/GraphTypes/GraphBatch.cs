@@ -1,6 +1,7 @@
 ﻿using GraphQL.Types;
 using StackTools.Wa2Wrapper;
 using StackTools.Wa2Wrapper.wa2Resource;
+using System.Globalization;
 using System.Linq;
 
 namespace StackTools.Nepenthes.GraphQL.GraphTypes
@@ -9,15 +10,16 @@ namespace StackTools.Nepenthes.GraphQL.GraphTypes
     {
         private Wa2Client _client;
         private TypeFieldAliasHelper _fieldAlias;
-        private string _dateFormat;
+        private string _dateFormatString;
 
         public GraphBatch(
             Wa2Client aClient,
-            TypeFieldAliasHelper aFieldAlias)
+            TypeFieldAliasHelper aFieldAlias,
+            DateTimeFormatInfo aDateTimeFormat)
         {
             this._client = aClient;
             this._fieldAlias = aFieldAlias;
-            this._dateFormat = "yyyy-mm-dd";
+            this._dateFormatString = aDateTimeFormat.FullDateTimePattern;
 
             Name = "batch";
             Description = "batch";
@@ -67,7 +69,7 @@ namespace StackTools.Nepenthes.GraphQL.GraphTypes
                 resolve: context => context.Source.State);
 
             // day no
-            Field<StringGraphType>(
+            Field<IntGraphType>(
                 name: "day_no",
                 description: "",
                 resolve: context => context.Source.DayNo);
@@ -76,25 +78,25 @@ namespace StackTools.Nepenthes.GraphQL.GraphTypes
             Field<StringGraphType>(
                 name: "generation_time",
                 description: "",
-                resolve: context => context.Source.GenerationTime.ToString(this._dateFormat));
+                resolve: context => context.Source.GenerationTime.ToString(this._dateFormatString));
 
             // start time
             Field<StringGraphType>(
                 name: "start_time",
                 description: "",
-                resolve: context => context.Source.StartTime.ToString(this._dateFormat));
+                resolve: context => context.Source.StartTime.ToString(this._dateFormatString));
 
             // finish time, nullable
             Field<StringGraphType>(
                 name: "finish_time",
                 description: "",
-                resolve: context => context.Source.FinishTime.HasValue ? context.Source.FinishTime.Value.ToString(this._dateFormat) : null);            
+                resolve: context => context.Source.FinishTime.HasValue ? context.Source.FinishTime.Value.ToString(this._dateFormatString) : null);            
 
             // animal arrival
             Field<StringGraphType>(
                 name: "animal_arrival_time",
                 description: "",
-                resolve: context => context.Source.AnimalArrival.ToString(this._dateFormat));
+                resolve: context => context.Source.AnimalArrival.ToString(this._dateFormatString));
 
             #endregion
 

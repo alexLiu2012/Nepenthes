@@ -8,15 +8,15 @@ namespace StackTools.Nepenthes.GraphQL.GraphTypes
     public class GraphApplication : ObjectGraphType<Wa2Application>
     {
         private Wa2Client _client;
-        private TypeFieldAliasHelper _fieldAlias;
+        private TypeFieldAliasHelper _fieldAlias;       
 
         public GraphApplication(
             Wa2Client aClient,
-            TypeFieldAliasHelper afieldAlias)
+            TypeFieldAliasHelper afieldAlias)            
         {
             this._client = aClient;
-            this._fieldAlias = afieldAlias;
-            
+            this._fieldAlias = afieldAlias;            
+
             Name = "applications";
             Description = "applications";
 
@@ -26,8 +26,7 @@ namespace StackTools.Nepenthes.GraphQL.GraphTypes
             // name
             Field<StringGraphType>(
                 name: "name",
-                description: "",
-                arguments: null,    // can use alias
+                description: "",                
                 resolve: context => context.Source.Name);
 
             // display name with alias

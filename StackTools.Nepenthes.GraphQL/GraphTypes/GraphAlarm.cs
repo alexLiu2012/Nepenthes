@@ -1,23 +1,25 @@
 ﻿using GraphQL.Types;
 using StackTools.Wa2Wrapper;
 using StackTools.Wa2Wrapper.wa2Resource;
+using System.Globalization;
 using System.Linq;
 
 namespace StackTools.Nepenthes.GraphQL.GraphTypes
 {
     public class GraphAlarm : ObjectGraphType<Wa2Alarm>
     {
-        private TypeFieldAliasHelper _fieldAlias;
-        private string _dateFormat;
         private Wa2Client _client;
-
+        private TypeFieldAliasHelper _fieldAlias;
+        private string _dateFormatString;
+        
         public GraphAlarm(
             Wa2Client aClient,
-            TypeFieldAliasHelper afieldAlias)
+            TypeFieldAliasHelper afieldAlias,
+            DateTimeFormatInfo aDateTimeFormat)
         {
             this._client = aClient;
             this._fieldAlias = afieldAlias;
-            this._dateFormat = "yyyy-mm-dd";                        
+            this._dateFormatString = aDateTimeFormat.FullDateTimePattern;                        
             
             Name = "alarm";
             Description = "alarm";            
@@ -107,11 +109,11 @@ namespace StackTools.Nepenthes.GraphQL.GraphTypes
                 description: "",
                 resolve: context => context.Source.IsCeased);
 
-            // can acknowledge
+            // is acknowledged
             Field<BooleanGraphType>(
-                name: "can_acknowledge",
+                name: "is_acknowledged",
                 description: "",
-                resolve: context => context.Source.CanAcknowledge);
+                resolve: context => context.Source.IsAcknowledged);
 
             // acknowledged by, nullable
             Field<StringGraphType>(
@@ -123,21 +125,21 @@ namespace StackTools.Nepenthes.GraphQL.GraphTypes
             Field<StringGraphType>(
                 name: "generation_time",
                 description: "",
-                resolve: context => context.Source.GenerationTime.ToString(this._dateFormat));
+                resolve: context => context.Source.GenerationTime.ToString(this._dateFormatString));
 
             // acknowledged time, nullable
             Field<StringGraphType>(
                 name: "acknowledge_time",
                 description: "",
                 resolve: context =>
-                    context.Source.AcknowledgedTime.HasValue ? context.Source.AcknowledgedTime.Value.ToString(this._dateFormat) : null);
+                    context.Source.AcknowledgedTime.HasValue ? context.Source.AcknowledgedTime.Value.ToString(this._dateFormatString) : null);
 
             // ceased time, nullable
             Field<StringGraphType>(
                 name: "ceased_time",
                 description: "",
                 resolve: context =>
-                    context.Source.CeasedTime.HasValue ? context.Source.CeasedTime.Value.ToString(this._dateFormat) : null);
+                    context.Source.CeasedTime.HasValue ? context.Source.CeasedTime.Value.ToString(this._dateFormatString) : null);
 
             // description
             Field<StringGraphType>(

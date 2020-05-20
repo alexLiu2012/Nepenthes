@@ -1,22 +1,16 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Globalization;
 using GraphQL.Server;
 using GraphQL.Server.Ui.Playground;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using StackTools.Nepenthes.GraphQL.GraphQL;
 using StackTools.Nepenthes.GraphQL.GraphTypes;
 using StackTools.Wa2Wrapper;
-using StackTools.Wa2Wrapper.wa2Resource;
 
 namespace StackTools.Nepenthes.GraphQL
 {
@@ -46,9 +40,15 @@ namespace StackTools.Nepenthes.GraphQL
             services.Configure<TypeFieldAlias>(Configuration);
             services.AddScoped(sp => sp.GetService<IOptionsSnapshot<TypeFieldAlias>>().Value);
 
+            // register datetime format            
+            services.AddScoped<DateTimeFormatInfo>(sp => new DateTimeFormatInfo()
+            {                
+                FullDateTimePattern = Configuration.GetValue<string>("dateTimeFormat") ?? "yyyy-MM-dd hh:mm:ss"
+            }) ;
+
             // register graphql types
             services.AddScoped<GraphAlarm>();            
-            /* services.AddScoped<GraphApplication>(); */
+            services.AddScoped<GraphApplication>();
             services.AddScoped<GraphBatch>();            
             services.AddScoped<GraphController>();            
             /* services.AddScoped<GraphKeyInfo>(); */
@@ -72,16 +72,15 @@ namespace StackTools.Nepenthes.GraphQL
             // register graphql schema
             services.AddScoped<Wa2Schema>();
 
-            // register graphql services
+            var a = Configuration.GetValue<bool>("ignoreNullValues");
+            // register graphql services            
             services.AddGraphQL(options =>
             {
                 options.ExposeExceptions = false;
                 options.EnableMetrics = false;
             })
-                .AddSystemTextJson()
-                //.AddUserContextBuilder()
-            
-                ;
+                .AddSystemTextJson(opt => opt.IgnoreNullValues = Configuration.GetValue<bool>("ignoreNullValues"));                      
+                
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

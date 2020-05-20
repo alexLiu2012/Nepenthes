@@ -48,18 +48,24 @@ namespace StackTools.Nepenthes.GraphQL.GraphQL
                 resolve: alarmArgs.GetResolver());
 
             // query applications
-            //Field<ListGraphType<GraphApplication>>();
+            Field<ListGraphType<GraphApplication>>(
+                name: "applications",
+                description: "",
+                arguments: applicationArgs.GetArguments(),
+                resolve: applicationArgs.GetResolver());
 
             // query batches
             Field<ListGraphType<GraphBatch>>(
                 name: "batches",
-                description:"",
+                description: "",
+                arguments: batchArgs.GetArguments(),
                 resolve: batchArgs.GetResolver());
 
             // query controllers
             Field<ListGraphType<GraphController>>(
                 name: "controllers",
                 description:"",
+                arguments: controllerArgs.GetArguments(),
                 resolve: controllerArgs.GetResolver());
 
             // query keyinfos
@@ -69,13 +75,14 @@ namespace StackTools.Nepenthes.GraphQL.GraphQL
             Field<ListGraphType<GraphKeyValue>>(
                 name: "keyvalues",
                 description:"",
-                arguments: null,
+                arguments: keyvalueArgs.GetArguments(),
                 resolve: keyvalueArgs.GetResolver());
 
             // query locations
             Field<ListGraphType<GraphLocation>>(
                 name: "locations",
                 description: "",
+                arguments: locationArgs.GetArguments(),
                 resolve: locationArgs.GetResolver());
     
         }

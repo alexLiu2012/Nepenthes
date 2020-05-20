@@ -14,6 +14,7 @@ namespace StackTools.Nepenthes.GraphQL
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
+            
                 .ConfigureHostConfiguration(cfg =>
                 {
                     // load default settings from .appsettings
@@ -22,8 +23,8 @@ namespace StackTools.Nepenthes.GraphQL
 
                     cfg.AddJsonFile(Path.Combine(Directory.GetCurrentDirectory(), "webaccess.config.json"), true, true);
 
-                    // add alias dictionary
-                    cfg.AddJsonFile(Path.Combine(Directory.GetCurrentDirectory(), "webaccess.alias.json"), true, true);
+                    cfg.AddJsonFile(Path.Combine(Directory.GetCurrentDirectory(), "graphql.config.json"), true, true);                    
+                    cfg.AddJsonFile(Path.Combine(Directory.GetCurrentDirectory(), "graphql.alias.json"), true, true);
                 })
 
                 .ConfigureWebHostDefaults(webBuilder =>

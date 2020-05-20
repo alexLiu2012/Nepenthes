@@ -1,6 +1,7 @@
 ﻿using GraphQL.Types;
 using StackTools.Wa2Wrapper;
 using StackTools.Wa2Wrapper.wa2Resource;
+using System.Globalization;
 using System.Linq;
 
 namespace StackTools.Nepenthes.GraphQL.GraphTypes
@@ -9,15 +10,16 @@ namespace StackTools.Nepenthes.GraphQL.GraphTypes
     {
         private Wa2Client _client;
         private TypeFieldAliasHelper _fieldAlias;
-        private string _dateFormat;
+        private string _dateFormatString;
 
         public GraphKeyValue(
             Wa2Client aClient,
-            TypeFieldAliasHelper aFieldAlias)
+            TypeFieldAliasHelper aFieldAlias,
+            DateTimeFormatInfo aDateTimeFormat)
         {
             this._client = aClient;
             this._fieldAlias = aFieldAlias;
-            this._dateFormat = "yyyy-mm-dd";
+            this._dateFormatString = aDateTimeFormat.FullDateTimePattern;
 
             Name = "keyvalues";
             Description = "";
@@ -29,7 +31,7 @@ namespace StackTools.Nepenthes.GraphQL.GraphTypes
             Field<StringGraphType>(
                 name: "name",
                 description: "",                
-                resolve: context => context.Source.KeyInfo);
+                resolve: context => context.Source.KeyInfo.Split('/')?.LastOrDefault());
 
             // display name
             Field<StringGraphType>(
@@ -38,7 +40,7 @@ namespace StackTools.Nepenthes.GraphQL.GraphTypes
                 arguments: this._fieldAlias.Arguments,
                 resolve: context =>
                 {
-                    var value = context.Source.KeyInfo;
+                    var value = context.Source.KeyInfo.Split('/')?.LastOrDefault();
                     return this._fieldAlias.GetAlias(context, value);
                 });
 
@@ -57,6 +59,23 @@ namespace StackTools.Nepenthes.GraphQL.GraphTypes
                 {
                     var location = context.Source.RelatedTo.TrimStart("/wa/2/locations/".ToCharArray());
                     var value = this._client.Retrieve<Wa2Location>().FirstOrDefault(l => l.Id == location).Name;
+                    return this._fieldAlias.GetAlias(context, value);
+                });
+
+            // category
+            Field<StringGraphType>(
+                name: "category",
+                description: "",                
+                resolve: context => context.Source.KeyInfo.Split('/')?.FirstOrDefault());
+
+            // display category with alias
+            Field<StringGraphType>(
+                name: "display_category",
+                description: "",
+                arguments: this._fieldAlias.Arguments,
+                resolve: context =>
+                {
+                    var value = context.Source.KeyInfo.Split('/')?.FirstOrDefault();
                     return this._fieldAlias.GetAlias(context, value);
                 });
 
@@ -82,7 +101,7 @@ namespace StackTools.Nepenthes.GraphQL.GraphTypes
             Field<StringGraphType>(
                 name: "timestamp",
                 description: "",
-                resolve: context => context.Source.Timestamp.ToString(this._dateFormat));
+                resolve: context => context.Source.Timestamp.ToString(this._dateFormatString));
 
             // description
             Field<StringGraphType>(
